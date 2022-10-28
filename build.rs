@@ -3,6 +3,17 @@ extern crate bindgen;
 use std::env;
 use std::path::PathBuf;
 fn main() {
+    std::process::Command::new("git")
+        .args([
+            "submodule",
+            "update",
+            "--init",
+            "--depth 1",
+            "--recommend-shallow",
+        ])
+        .output()
+        .expect("Failed to fetch git submodules!");
+
     cc::Build::new().file("src/whisper/ggml.c").compile("ggml");
     cc::Build::new()
         .cpp(true)

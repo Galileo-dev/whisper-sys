@@ -7,13 +7,20 @@ include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::{ffi::CStr, mem};
+    use std::{
+        ffi::{CStr, CString},
+        mem,
+        os::unix::prelude::OsStrExt,
+        path::PathBuf,
+    };
 
     #[test]
-    fn whisper_call_context() {
-        let path = "test.db".as_bytes();
+    fn test_whisper_init() {
+        let path = PathBuf::from("./test.db");
+
         unsafe {
-            let whisper_context = whisper_init(path.as_ptr() as *const char);
+            let whisper_context =
+                whisper_init(CString::new(path.as_os_str().as_bytes()).unwrap().as_ptr());
         }
     }
 }
